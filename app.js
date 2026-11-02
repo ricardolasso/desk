@@ -276,6 +276,33 @@
     });
   }
 
+  // ---------------------------------------------------------------- paste setup (D63, Home Screen app)
+  async function pasteSetup() {
+    const field = document.getElementById("setupField"), msg = document.getElementById("setupMsg");
+    let text = field.value.trim();
+    if (!text && navigator.clipboard && navigator.clipboard.readText) {
+      try { text = (await navigator.clipboard.readText()).trim(); } catch (e) { text = ""; }
+    }
+    if (!text) {
+      msg.style.color = "var(--label2)";
+      msg.textContent = "Couldn't read the clipboard. Long-press the box above, tap Paste, then tap Paste setup link again.";
+      field.focus();
+      return;
+    }
+    try {
+      const v = window.deskParseSetup(text);
+      localStorage.setItem(LS_T, v.t);
+      localStorage.setItem(LS_D, v.d);
+      field.value = "";
+      location.replace(location.pathname + location.search + "#/home");
+      location.reload();
+    } catch (e) {
+      field.value = "";
+      msg.style.color = "var(--red)";
+      msg.textContent = e.message;
+    }
+  }
+
   // ---------------------------------------------------------------- router
   function parseRoute() { const r = location.hash.replace(/^#\/?/, ""); return r || "home"; }
   async function render(silent) {
@@ -285,7 +312,11 @@
     const tab = { home: "home", coin: "home", audit: "home", agents: "agents", agent: "agents", activity: "activity", account: "account" }[name] || "home";
     document.querySelectorAll(".tab").forEach(t => t.classList.toggle("on", t.dataset.tab === tab));
     if (!configured) {
-      $app.innerHTML = `<div class="screen">${emptyView("Set up this phone", "Open the setup link the Telegram bot sends you. It saves your access on this phone and removes itself from the address bar.", "🔑")}</div>`;
+      $app.innerHTML = `<div class="screen"><div class="state" style="padding-bottom:16px"><div class="ico">🔑</div><h3>Set up this phone</h3>
+        <p>Open your bot in Telegram, send /link, long-press the link and Copy, then come back here and tap Paste setup link.</p></div>
+        <div class="card"><textarea class="copy" id="setupField" style="min-height:64px" placeholder="Setup link" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Setup link"></textarea>
+        <div class="btn-row"><button class="btn blue" data-act="pastesetup">Paste setup link</button></div>
+        <p class="footnote" id="setupMsg" role="alert" style="margin:8px 0 0"></p></div></div>`;
       return;
     }
     const fn = screens[name] || screens.home;
@@ -313,6 +344,7 @@
     const act = e.target.closest("[data-act]");
     if (act && act.dataset.act === "retry") render();
     if (act && act.dataset.act === "push") enablePush();
+    if (act && act.dataset.act === "pastesetup") pasteSetup();
     const cp = e.target.closest("[data-copy]");
     if (cp) copy(cp.dataset.copy);
     const st = e.target.closest("[data-set]");

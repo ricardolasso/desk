@@ -1,6 +1,6 @@
 // Desk service worker: app-shell cache (network-first) + web push. Data JSON is never cached (D50).
-const CACHE = "desk-shell-v1";
-const SHELL = ["./", "index.html", "app.css", "app.js", "chart.js", "poll.js", "actions.js", "vapid.js",
+const CACHE = "desk-shell-v2";
+const SHELL = ["./", "index.html", "app.css", "app.js", "chart.js", "setup.js", "poll.js", "actions.js", "vapid.js",
                "manifest.webmanifest", "icon-180.png", "icon-192.png"];
 self.addEventListener("install", (e) => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", (e) => {

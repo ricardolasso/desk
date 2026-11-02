@@ -1,0 +1,1 @@
+{"agent":{"name":"scanner","status":"down","paused":false,"heartbeat_age_s":null,"ws_reconnects":0},"settings":{"max_h1":80,"max_top10":25,"max_wait":60,"min_age":10,"min_liq":40000,"poll":60,"runner_h24":300},"decisions":[],"skip_reasons_24h":[]}

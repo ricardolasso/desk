@@ -3,19 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="color-scheme" content="dark">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Desk">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex,nofollow">
 <title>Desk</title>
-<style>
-html,body{margin:0;background:#000;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif}
-main{min-height:100vh;display:flex;align-items:center;justify-content:center}
-.badge{font-size:12px;letter-spacing:.08em;padding:4px 8px;border-radius:6px;background:#1c1c1e;color:#ff9f0a}
-</style>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="app.css">
 </head>
 <body>
-<main><div><h1>Desk</h1><span class="badge">PAPER</span><p style="color:#8e8e93">Setting up.</p></div></main>
+<main id="app" aria-live="polite"></main>
+<nav class="tabbar" aria-label="Tabs">
+  <button class="tab" data-tab="home" aria-label="Home"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2.5 11.2l1.3 1.5L5 11.7V20a1 1 0 0 0 1 1h4.5v-6h3v6H18a1 1 0 0 0 1-1v-8.3l1.2 1 1.3-1.5Z"/></svg>Home</button>
+  <button class="tab" data-tab="agents" aria-label="Agents"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h7v7H4zm9 0h7v7h-7zM4 13h7v7H4zm9 0h7v7h-7z"/></svg>Agents</button>
+  <button class="tab" data-tab="activity" aria-label="Activity"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Activity</button>
+  <button class="tab" data-tab="account" aria-label="Account"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.4 0-8 2.2-8 5v2h16v-2c0-2.8-3.6-5-8-5Z"/></svg>Account</button>
+</nav>
 <script src="vapid.js"></script>
 <script src="poll.js"></script>
 <script src="actions.js"></script>
+<script src="chart.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

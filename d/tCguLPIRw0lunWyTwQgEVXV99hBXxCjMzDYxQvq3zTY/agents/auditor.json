@@ -1,1 +1,1 @@
-{"agent":{"name":"auditor","status":"running","paused":false,"heartbeat_age_s":6,"ws_reconnects":0},"settings":{"age":10,"enabled":true,"max_bundled":5,"max_delegated":10,"max_dev":5,"min_lp_locked":99,"retries":3,"top10":25},"decisions":[],"skip_reasons_24h":[]}
+{"agent":{"name":"auditor","status":"running","paused":false,"heartbeat_age_s":10,"ws_reconnects":0},"settings":{"age":10,"enabled":true,"max_bundled":5,"max_delegated":10,"max_dev":5,"min_lp_locked":99,"retries":3,"top10":25},"decisions":[],"skip_reasons_24h":[]}

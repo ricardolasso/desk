@@ -1,1 +1,1 @@
-{"agent":{"name":"executor","status":"running","paused":false,"heartbeat_age_s":5,"ws_reconnects":0},"settings":{"below_min":"bump","confirm":5,"max_pool_pct":2,"min_ticket":2.0,"recheck_liq":20,"recheck_price":15,"stack_pct":8},"decisions":[],"skip_reasons_24h":[]}
+{"agent":{"name":"executor","status":"running","paused":false,"heartbeat_age_s":4,"ws_reconnects":0},"settings":{"below_min":"bump","confirm":5,"max_pool_pct":2,"min_ticket":2.0,"recheck_liq":20,"recheck_price":15,"stack_pct":8},"decisions":[],"skip_reasons_24h":[]}

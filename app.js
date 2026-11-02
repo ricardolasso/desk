@@ -161,7 +161,11 @@
         <div class="metric"><div class="k">Fees paid</div><div class="v">${usd(acc.fees_paid_usd)}</div></div></div></div>`;
       const z = acc.sizing;
       if (z) h += `<div class="section-h">Ticket size</div><div class="card">${z.warning ? `<div class="warn" role="alert" style="color:var(--orange);font-weight:600;margin-bottom:8px">⚠️ ${esc(z.warning)}</div>` : ""}
-        <div class="footnote">Ticket ${esc(z.stack_pct)}% of stack = ${usd(z.base_ticket)}${z.bumped ? " → bumped to " + usd(z.ticket) : ""} · min stack ${usd(z.min_stack)} (${usd(z.min_ticket)} / ${esc(z.stack_pct)}%) · pool cap ${esc(z.max_pool_pct)}%</div></div>`;
+        <div class="footnote">PAPER ticket ${esc(z.stack_pct)}% of stack = ${usd(z.base_ticket)}${z.bumped ? " → bumped to " + usd(z.ticket) : ""} · min stack ${usd(z.min_stack)} (${usd(z.min_ticket)} / ${esc(z.stack_pct)}%) · pool cap ${esc(z.max_pool_pct)}%</div></div>`;
+      const L = acc.live_stack;
+      if (L) h += `<div class="section-h">LIVE stack</div><div class="card"><div style="font-size:20px;font-weight:600">${L.set ? usd(L.live_stack) : "Not set"}</div>
+        <div class="footnote">${L.set ? "You set it " + esc(ago(L.set_ts)) + (L.age_h > 24 ? " · over 24h ago, update it if you traded" : "") : "Set it in Telegram: /set desk.live_stack &lt;usd&gt;"}</div>
+        <p class="caption" style="margin:8px 0 0">Used only in LIVE. The desk never changes it and never trades: you buy and sell on FOMO, then update it.</p></div>`;
       h += `<div class="section-h">Mode</div><div class="card"><div style="display:flex;align-items:center;gap:10px"><span class="badge ${acc.mode === "LIVE" ? "live" : "paper"}">${esc(acc.mode)}</span>
         <span class="footnote">${acc.paper_nights} full PAPER night(s) · LIVE ${acc.live_allowed ? "unlocked" : "locked until 1 full PAPER night"}</span></div>
         <div class="btn-row"><a class="btn gray" href="${deskActions.paper()}">PAPER</a><a class="btn gray" href="${deskActions.live()}">LIVE…</a></div>

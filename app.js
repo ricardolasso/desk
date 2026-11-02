@@ -159,6 +159,9 @@
         <div class="metric"><div class="k">Realized P&amp;L</div><div class="v ${cls(acc.realized_pnl_usd)}">${sgnUsd(acc.realized_pnl_usd)}</div></div>
         <div class="metric"><div class="k">Trades / wins</div><div class="v">${acc.closed_trades} / ${acc.wins}</div></div>
         <div class="metric"><div class="k">Fees paid</div><div class="v">${usd(acc.fees_paid_usd)}</div></div></div></div>`;
+      const z = acc.sizing;
+      if (z) h += `<div class="section-h">Ticket size</div><div class="card">${z.warning ? `<div class="warn" role="alert" style="color:var(--orange);font-weight:600;margin-bottom:8px">⚠️ ${esc(z.warning)}</div>` : ""}
+        <div class="footnote">Ticket ${esc(z.stack_pct)}% of stack = ${usd(z.base_ticket)}${z.bumped ? " → bumped to " + usd(z.ticket) : ""} · min stack ${usd(z.min_stack)} (${usd(z.min_ticket)} / ${esc(z.stack_pct)}%) · pool cap ${esc(z.max_pool_pct)}%</div></div>`;
       h += `<div class="section-h">Mode</div><div class="card"><div style="display:flex;align-items:center;gap:10px"><span class="badge ${acc.mode === "LIVE" ? "live" : "paper"}">${esc(acc.mode)}</span>
         <span class="footnote">${acc.paper_nights} full PAPER night(s) · LIVE ${acc.live_allowed ? "unlocked" : "locked until 1 full PAPER night"}</span></div>
         <div class="btn-row"><a class="btn gray" href="${deskActions.paper()}">PAPER</a><a class="btn gray" href="${deskActions.live()}">LIVE…</a></div>
@@ -168,10 +171,20 @@
         <a class="chip" href="${a.paused ? deskActions.resume(a.name) : deskActions.pause(a.name)}">${a.paused ? "Resume" : "Pause"}</a></div>`).join("") + `</div>`;
       h += `<div class="section-h">Notifications</div><div class="card" id="pushCard"><button class="btn blue" data-act="push">Enable push notifications</button>
         <p class="caption" style="margin:8px 0 0">On iPhone this works only after Share → Add to Home Screen, opened from the Home Screen (iOS 16.4+).</p></div>`;
+      // settings grouped by agent, with defaults (D65)
+      const defs = acc.defaults || {}, ORDER = ["scanner", "auditor", "analyst", "executor", "risk", "desk"];
+      const keys = [...new Set([...Object.keys(defs), ...Object.keys(st)])].filter(k => !k.startsWith("agent."));
       const groups = {};
-      Object.entries(st).forEach(([k, v]) => { const [g] = k.split("."); (groups[g] = groups[g] || []).push([k, v]); });
-      h += Object.entries(groups).filter(([g]) => g !== "agent").map(([g, rows]) => `<div class="section-h">Settings · ${esc(g)}</div><div class="list">` +
-        rows.map(([k, v]) => `<div class="row tap" data-set="${esc(k)}" data-val="${esc(JSON.stringify(v))}"><div class="main"><div class="t" style="font-size:15px">${esc(k.slice(g.length + 1))}</div></div><div class="v dim" style="font-size:15px">${esc(v)}</div></div>`).join("") + `</div>`).join("");
+      keys.forEach(k => { const g = k.split(".")[0]; (groups[g] = groups[g] || []).push(k); });
+      const gnames = Object.keys(groups).sort((a, b) => (ORDER.indexOf(a) + 1 || 99) - (ORDER.indexOf(b) + 1 || 99));
+      const changed = keys.filter(k => k in defs && k in st && JSON.stringify(st[k]) !== JSON.stringify(defs[k])).length;
+      h += `<div class="section-h">Settings</div><p class="caption" style="margin:0 0 8px">${changed ? changed + " changed from default" : "All settings at defaults"}</p>`;
+      h += gnames.map(g => `<div class="section-h" style="text-transform:capitalize">${esc(g)}</div><div class="list">` +
+        groups[g].map(k => {
+          const v = k in st ? st[k] : defs[k], d = defs[k], diff = k in defs && JSON.stringify(v) !== JSON.stringify(d);
+          return `<div class="row tap" data-set="${esc(k)}" data-val="${esc(JSON.stringify(v))}"><div class="main"><div class="t" style="font-size:15px">${esc(k.slice(g.length + 1))}</div>
+            <div class="s">default ${esc(d === undefined ? "–" : d)}${diff ? " · changed" : ""}</div></div><div class="v ${diff ? "" : "dim"}" style="font-size:15px${diff ? ";color:var(--orange)" : ""}">${esc(v)}</div></div>`;
+        }).join("") + `</div>`).join("");
       h += `<p class="caption">Tap a setting to get the Telegram command that changes it.</p>`;
       h += `<div class="section-h">Ledger</div>`;
       h += acc.ledger.length ? `<div class="list">` + acc.ledger.slice(0, 30).map(l => `<div class="row"><div class="main"><div class="t" style="font-size:15px">${esc(l.note || l.kind)}</div>

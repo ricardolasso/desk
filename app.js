@@ -162,10 +162,19 @@
       const z = acc.sizing;
       if (z) h += `<div class="section-h">Ticket size</div><div class="card">${z.warning ? `<div class="warn" role="alert" style="color:var(--orange);font-weight:600;margin-bottom:8px">⚠️ ${esc(z.warning)}</div>` : ""}
         <div class="footnote">PAPER ticket ${esc(z.stack_pct)}% of stack = ${usd(z.base_ticket)}${z.bumped ? " → bumped to " + usd(z.ticket) : ""} · min stack ${usd(z.min_stack)} (${usd(z.min_ticket)} / ${esc(z.stack_pct)}%) · pool cap ${esc(z.max_pool_pct)}%</div></div>`;
-      const L = acc.live_stack;
+      const L = acc.live_stack, W = acc.wallet || {};
+      const fromWallet = L && L.source === "wallet";
       if (L) h += `<div class="section-h">LIVE stack</div><div class="card"><div style="font-size:20px;font-weight:600">${L.set ? usd(L.live_stack) : "Not set"}</div>
-        <div class="footnote">${L.set ? "You set it " + esc(ago(L.set_ts)) + (L.age_h > 24 ? " · over 24h ago, update it if you traded" : "") : "Set it in Telegram: /set desk.live_stack &lt;usd&gt;"}</div>
-        <p class="caption" style="margin:8px 0 0">Used only in LIVE. The desk never changes it and never trades: you buy and sell on FOMO, then update it.</p></div>`;
+        <div class="footnote">${fromWallet ? "From your FOMO wallet's cash · read " + esc(ago(W.read_ts)) + (W.stale ? " · STALE, last value kept" : "")
+          : L.set ? "You set it " + esc(ago(L.set_ts)) + (L.age_h > 24 ? " · over 24h ago, update it if you traded" : "") : "Set it in Telegram: /set desk.live_stack &lt;usd&gt; or /set desk.fomo_wallet &lt;address&gt;"}</div>
+        <p class="caption" style="margin:8px 0 0">Used only in LIVE. The desk never trades: you buy and sell on FOMO.${fromWallet ? " The stack follows the wallet's spendable cash (USDC + USDT + SOL)." : " Update it after you trade."}</p></div>`;
+      if (W.set) h += `<div class="section-h">FOMO wallet</div><div class="card"><div class="footnote mono">${esc(W.address)} · read-only${W.stale ? ' · <span style="color:var(--orange)">stale</span>' : ""}</div>
+        ${W.cash == null ? `<div class="footnote">No good read yet${W.error ? " (" + esc(W.error) + ")" : ""}</div>` : `<div class="grid2" style="margin:8px 0 0">
+        <div class="metric"><div class="k">Cash</div><div class="v">${usd(W.cash)}</div></div>
+        <div class="metric"><div class="k">Coins</div><div class="v">${usd(W.coins_value)}</div></div>
+        <div class="metric"><div class="k">Total</div><div class="v">${usd(W.total)}</div></div>
+        <div class="metric"><div class="k">Last read</div><div class="v">${esc(ago(W.read_ts))}</div></div></div>
+        <div class="footnote" style="margin-top:6px">USDC ${usd(W.usdc)} · USDT ${usd(W.usdt)} · SOL ${usd(W.sol_usd)}${(W.coins || []).length ? " · " + W.coins.map(c => esc(c.symbol || c.mint) + " " + usd(c.value)).join(" · ") : ""}${W.dust ? " · " + W.dust + " dust" : ""}${W.unpriced ? " · " + W.unpriced + " unpriced" : ""}</div>`}</div>`;
       h += `<div class="section-h">Mode</div><div class="card"><div style="display:flex;align-items:center;gap:10px"><span class="badge ${acc.mode === "LIVE" ? "live" : "paper"}">${esc(acc.mode)}</span>
         <span class="footnote">${acc.paper_nights} full PAPER night(s) · LIVE ${acc.live_allowed ? "unlocked" : "locked until 1 full PAPER night"}</span></div>
         <div class="btn-row"><a class="btn gray" href="${deskActions.paper()}">PAPER</a><a class="btn gray" href="${deskActions.live()}">LIVE…</a></div>

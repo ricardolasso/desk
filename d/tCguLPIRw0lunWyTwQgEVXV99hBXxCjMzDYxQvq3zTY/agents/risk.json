@@ -1,1 +1,1 @@
-{"agent":{"name":"risk","status":"running","paused":false,"heartbeat_age_s":15,"ws_reconnects":0},"settings":{"confirm":2,"poll":15,"stop":6,"timeout_h":3,"timeout_min_gain":5,"trail":12,"trail_start":20},"decisions":[],"skip_reasons_24h":[]}
+{"agent":{"name":"risk","status":"down","paused":false,"heartbeat_age_s":171,"ws_reconnects":0},"settings":{"confirm":2,"poll":15,"stop":6,"timeout_h":3,"timeout_min_gain":5,"trail":12,"trail_start":20},"decisions":[],"skip_reasons_24h":[]}
